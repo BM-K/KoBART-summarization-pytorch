@@ -1,2 +1,2 @@
 # KoBART-pytorch
-KoBART summarization implementation using pytorch
+KoBART summarization using pytorch
