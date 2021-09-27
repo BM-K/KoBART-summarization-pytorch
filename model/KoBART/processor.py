@@ -69,7 +69,11 @@ class Processor():
         model.to(self.args.device)
 
         criterion, optimizer = self.get_object(tokenizer, model)
-        scheduler = self.get_scheduler(optimizer, loader['train'])
+        
+        if self.args.test == 'False':
+            scheduler = self.get_scheduler(optimizer, loader['train'])
+        else:
+            scheduler = None
 
         config = {'loader': loader,
                   'optimizer': optimizer,
@@ -79,7 +83,7 @@ class Processor():
                   'args': self.args,
                   'model': model}
 
-        if config['args'].fp16 == 'True':
+        if config['args'].fp16 == 'True' and config['args'].test == 'False':
             config['model'], config['optimizer'] = amp.initialize(
                 config['model'], config['optimizer'], opt_level=config['args'].opt_level)
 
@@ -116,7 +120,7 @@ class Processor():
         with torch.no_grad():
             for step, batch in enumerate(self.config['loader']['valid']):
 
-                inputs, labels, aux = batch
+                inputs = batch
                 loss = self.run(inputs)
 
                 self.progress(loss)
@@ -130,11 +134,9 @@ class Processor():
         self.model_progress = self.model_progress.fromkeys(self.model_progress, 0)
 
         with torch.no_grad():
-            for step, batch in enumerate(self.config['loader']['valid']):
+            for step, batch in enumerate(tqdm(self.config['loader']['test'])):
 
                 inputs = batch
-                loss = self.run(inputs)
+                self.metric.generation(self.config, inputs)
 
-                self.progress(loss)
-
-        return self.return_value()
+        return self.metric.avg_rouge()

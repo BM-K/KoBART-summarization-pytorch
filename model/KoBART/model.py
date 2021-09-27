@@ -1,6 +1,6 @@
 import torch.nn as nn
 from kobart import get_pytorch_kobart_model
-from transformers import BartForConditionalGeneration, PreTrainedTokenizerFast
+from transformers import BartForConditionalGeneration
 
 
 class KoBARTConditionalGeneration(nn.Module):

@@ -34,8 +34,8 @@ def main(args, logger) -> None:
     if args.test == 'True':
         logger.info("Start Test")
 
-        test_loss, test_mem_acc = processor.test()
-        print(f'\n\t==Test loss: {test_loss:.4f}==\n')
+        rouge_score = processor.test()
+        print(f'\n{rouge_score}')
 
         processor.metric.print_size_of_model(config['model'])
 

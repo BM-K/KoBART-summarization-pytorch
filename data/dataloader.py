@@ -1,3 +1,4 @@
+import csv
 import torch
 import logging
 import numpy as np
@@ -41,8 +42,8 @@ class ModelDataLoader(Dataset):
 
     def load_data(self, type):
 
-        with open(self.file_path) as file:
-            lines = file.readlines()
+        with open(self.file_path, "r", encoding="utf-8") as file:
+            lines = csv.reader(file, delimiter="\t", quotechar='"')
 
             for line in lines:
                 check = self.data2tensor(line)
@@ -54,10 +55,11 @@ class ModelDataLoader(Dataset):
                len(self.labels)
 
     def data2tensor(self, line):
-        split_data = line.split('\t')
         try:
-            source, target = split_data[0], split_data[1]
+            source, target = line[0].strip(), line[1].strip()
         except IndexError:
+            print("Index Error")
+            exit()
             return False
 
         input_ids = self.add_padding_data(self.tokenizer.encode(source))
@@ -106,7 +108,7 @@ class ModelDataLoader(Dataset):
                       'decoder_input_ids': self.decoder_input_ids[index].to(self.args.device),
                       'decoder_attention_mask': self.decoder_attention_mask[index].to(self.args.device),
                       'labels': self.labels[index].to(self.args.device)}
-
+        
         return input_data
 
     def __len__(self):
