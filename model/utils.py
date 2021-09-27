@@ -80,20 +80,14 @@ class Metric():
             tw.writerow([source, ref, hyp])
 
     def rouge_score(self, config, ref, hyp):
+        # KoBART Tokenizer
         # ref = ' '.join(config['tokenizer'].tokenize(ref.strip()))
         # hyp = ' '.join(config['tokenizer'].tokenize(hyp.strip()))
+        
+        # Mecab Tokenizer
         ref = ' '.join(mecab.morphs(REMOVE_CHAR_PATTERN.sub(" ", ref.lower()).strip()))
         hyp = ' '.join(mecab.morphs(REMOVE_CHAR_PATTERN.sub(" ", hyp.lower()).strip()))
 
-        """
-        ref = ' '.join(config['tokenizer'].tokenize(
-            REMOVE_CHAR_PATTERN.sub(" ", ref.lower()).strip()))
-        ref = REMOVE_CHAR_PATTERN.sub(" ", ref.lower())
-
-        hyp = ' '.join(config['tokenizer'].tokenize(
-            REMOVE_CHAR_PATTERN.sub(" ", hyp.lower()).strip()))
-        hyp = REMOVE_CHAR_PATTERN.sub(" ", hyp.lower())
-        """
         score = self.rouge.get_scores(hyp, ref)[0]
         
         for metric, scores in self.rouge_scores.items():
