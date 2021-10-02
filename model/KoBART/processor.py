@@ -24,8 +24,8 @@ class Processor():
         self.model_progress = {'loss': -1, 'iter': -1, 'acc': -1}
         self.sorted_path = args.path_to_save + args.ckpt
 
-    def run(self, inputs):
-        loss = self.config['model'](inputs)
+    def run(self, inputs, mode=None):
+        loss = self.config['model'](inputs, mode)
 
         return loss
 
@@ -40,7 +40,7 @@ class Processor():
 
     def get_object(self, tokenizer, model):
         criterion = nn.CrossEntropyLoss()
-
+        """
         param_optimizer = list(model.named_parameters())
         no_decay = ['bias', 'LayerNorm.bias', 'LayerNorm.weight']
         optimizer_grouped_parameters = [
@@ -49,14 +49,16 @@ class Processor():
             {'params': [p for n, p in param_optimizer if any(
                 nd in n for nd in no_decay)], 'weight_decay': 0.0}
         ]
-        optimizer = optim.AdamW(optimizer_grouped_parameters,
+        """
+        optimizer = optim.AdamW(model.parameters(),
                                 lr=self.args.lr)
 
         return criterion, optimizer
 
     def get_scheduler(self, optim, train_loader):
         train_total = len(train_loader) * self.args.epochs
-        scheduler = get_linear_schedule_with_warmup(optim,
+        scheduler = get_linear_schedule_with_warmup(
+                    optim,
                     num_warmup_steps=self.args.warmup_ratio*train_total,
                     num_training_steps=train_total)
 
@@ -65,7 +67,7 @@ class Processor():
     def model_setting(self):
         loader, tokenizer = get_loader(self.args, self.metric)
 
-        model = KoBARTConditionalGeneration(self.args)
+        model = KoBARTConditionalGeneration(self.args, tokenizer)
         model.to(self.args.device)
 
         criterion, optimizer = self.get_object(tokenizer, model)
@@ -99,7 +101,7 @@ class Processor():
             self.config['optimizer'].zero_grad()
 
             inputs = batch
-            loss = self.run(inputs)
+            loss = self.run(inputs, mode='train')
 
             if self.args.fp16 == 'True':
                 with amp.scale_loss(loss, self.config['optimizer']) as scaled_loss:
@@ -109,7 +111,7 @@ class Processor():
 
             self.config['optimizer'].step()
             self.config['scheduler'].step()
-            self.progress(loss)
+            self.progress(loss.data)
 
         return self.return_value()
 
@@ -121,9 +123,9 @@ class Processor():
             for step, batch in enumerate(self.config['loader']['valid']):
 
                 inputs = batch
-                loss = self.run(inputs)
+                loss = self.run(inputs, mode='valid')
 
-                self.progress(loss)
+                self.progress(loss.data)
 
         return self.return_value()
 

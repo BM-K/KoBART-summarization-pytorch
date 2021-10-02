@@ -73,27 +73,39 @@ class Metric():
         # self.draw_graph(cp)
         self.performance_check(cp)
 
-    def result_file(self, config, source, ref, hyp):
-        sorted_path = config['args'].path_to_save + 'result.tsv'
-        with open(sorted_path, 'a', encoding='utf-8') as f:
-            tw = csv.writer(f, delimiter='\t')
-            tw.writerow([source, ref, hyp])
+    def preprocess_text(self, review):
 
-    def rouge_score(self, config, ref, hyp):
-        # KoBART Tokenizer
-        # ref = ' '.join(config['tokenizer'].tokenize(ref.strip()))
-        # hyp = ' '.join(config['tokenizer'].tokenize(hyp.strip()))
+        # Remove breaks
+        review = re.sub("<br />", " ", review)
+
+        # Remove non-letters and non-numbers
+        alphanum = re.sub("[^A-Za-z0-9가-힣]", " ", review)
+
+        # Convert to lowercase and split into individual words
+        tokens = alphanum.lower().split()
+
+        return (" ".join(tokens))
+
+    def result_file(self, config, hyp):
+        sorted_path = config['args'].path_to_save + 'result.csv'
+        with open(sorted_path, 'a', encoding='utf-8') as f:
+            tw = csv.writer(f)
+            if self.step == 0:
+                tw.writerow(['id', 'summary'])
+            tw.writerow([str(self.step + 1), hyp])
+
+    def rouge_score(self, config, hyp, ref):
+        #self.result_file(config, hyp)
         
-        # Mecab Tokenizer
         ref = ' '.join(mecab.morphs(REMOVE_CHAR_PATTERN.sub(" ", ref.lower()).strip()))
         hyp = ' '.join(mecab.morphs(REMOVE_CHAR_PATTERN.sub(" ", hyp.lower()).strip()))
 
         score = self.rouge.get_scores(hyp, ref)[0]
         
         for metric, scores in self.rouge_scores.items():
-            for key, value in scores.items():
+            for key, valud in scores.items():
                 self.rouge_scores[metric][key] += score[metric][key]
-
+        
         self.step += 1
 
     def avg_rouge(self):
@@ -104,12 +116,13 @@ class Metric():
         return self.rouge_scores
 
     def generation(self, config, inputs):
-        outputs = config['model'].model.generate(inputs['input_ids'],
-                                                 max_length=self.args.max_len,
-                                                 num_beams=5)
+        outputs = config['model'](inputs, mode='test')
+        #outputs = config['model'].model.generate(inputs['input_ids'],
+        #                                         max_length=self.args.max_len,
+        #                                         num_beams=5, repetition_penalty=1.2)
 
         for step, beam in enumerate(outputs):
             ref = config['tokenizer'].decode(inputs['decoder_input_ids'][step], skip_special_tokens=True)
             hyp = config['tokenizer'].decode(beam, skip_special_tokens=True)
 
-            self.rouge_score(config, ref, hyp)
+            self.rouge_score(config, hyp, ref)

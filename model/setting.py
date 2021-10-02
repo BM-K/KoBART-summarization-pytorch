@@ -20,8 +20,8 @@ class Arguments():
     def add_hyper_parameters(self):
         self.add_argument('--patient', type=int, default=5)
         self.add_argument('--dropout', type=int, default=0.1)
-        self.add_argument('--max_len', type=int, default=512)
-        self.add_argument('--batch_size', type=int, default=16)
+        self.add_argument('--max_len', type=int, default=256)
+        self.add_argument('--batch_size', type=int, default=32)
         self.add_argument('--epochs', type=int, default=10)
         self.add_argument('--seed', type=int, default=1)
         self.add_argument('--lr', type=float, default=0.00003)

@@ -1,3 +1,4 @@
+import re
 import csv
 import torch
 import logging
@@ -54,16 +55,28 @@ class ModelDataLoader(Dataset):
                len(self.decoder_attention_mask) ==\
                len(self.labels)
 
+    def preprocess_text(self, review):
+
+        # Remove breaks
+        review = re.sub("<br />", " ", review)
+
+        # Remove non-letters and non-numbers
+        alphanum = re.sub("[^A-Za-z0-9가-힣]", " ", review)
+
+        # Convert to lowercase and split into individual words
+        tokens = alphanum.lower().split()
+
+        return (" ".join(tokens))
+
     def data2tensor(self, line):
         try:
-            source, target = line[0].strip(), line[1].strip()
+            source, target =  line[0].strip(), line[1].strip()# self.preprocess_text(line[0].strip()), self.preprocess_text(line[1].strip())
         except IndexError:
-            print("Index Error")
+            logger.info("Index Error")
             exit()
             return False
 
         input_ids = self.add_padding_data(self.tokenizer.encode(source))
-
         label_ids = self.tokenizer.encode(target) + [self.eos_token_idx]
         dec_input_ids = self.add_padding_data([self.pad_token_idx] + label_ids[:-1])
         label_ids = self.add_ignored_data(label_ids)
@@ -141,10 +154,10 @@ def get_loader(args, metric):
 
         loader = {'test': DataLoader(dataset=test_iter,
                                      batch_size=args.batch_size,
-                                     shuffle=True)}
+                                     shuffle=False)}
 
     else:
-        print("Error: None type loader")
+        logger.info("Error: None type loader")
         exit()
 
     return loader, tokenizer
