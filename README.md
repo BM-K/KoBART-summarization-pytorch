@@ -8,7 +8,7 @@ KoBART summarization using pytorch
     - Test Data : 9,182
  
 ## How to Train
-- KoBART summarization fine-tuning
+- KoBART summarization fine-tuning + Copy Mechanism
 ```
 [Training]
 python train.py --train True --test False --batch_size 16 --max_len 512 --lr 3e-05 --epochs 10
@@ -19,12 +19,19 @@ python train.py --train False --test True --batch_size 16 --max_len 512
 
 ## Model Performance
 - Test Data rouge score
- 
+### Base
 | | rouge-1 |rouge-2|rouge-l|
 |-------|--------:|--------:|--------:|
-| Precision| 0.5333 | 0.3463|0.4534|
-| Recall| 0.5775| 0.3737|0.4869|
-| F1| 0.5381| 0.3452|0.4555|
+| Precision|0.5333|0.3463|0.4534|
+| Recall|0.5775|0.3737|0.4869|
+| F1|0.5381|0.3452|0.4555|
+
+### Copy Mechanism
+| | rouge-1 |rouge-2|rouge-l|
+|-------|--------:|--------:|--------:|
+| Precision|0.5698|0.3776|0.4882|
+| Recall|0.5561|0.3612|0.4717|
+| F1|0.5460|0.3545|0.4654|
 
 ## Examples
 | ||Text|
