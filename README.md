@@ -1,5 +1,5 @@
 # KoBART-pytorch
-🧀 KoBART summarization using pytorch
+🧀 KoBART summarization using pytorch + copy mechanism
 
 ## Data
 - Data 구조
