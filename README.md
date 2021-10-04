@@ -22,7 +22,7 @@ python train.py --train False --test True --batch_size 16 --max_len 512
 ```
 
 ## Model Performance
-- Test data's rouge score
+- Test data's [rouge score](https://en.wikipedia.org/wiki/ROUGE_(metric)) 
 ### Base
 | | rouge-1 |rouge-2|rouge-l|
 |-------|--------:|--------:|--------:|
