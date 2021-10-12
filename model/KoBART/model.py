@@ -26,7 +26,7 @@ class KoBARTConditionalGeneration(nn.Module):
                               decoder_attention_mask=inputs['decoder_attention_mask'],
                                 labels=inputs['labels'], return_dict=True)
             
-            encoder_input_ids =inputs['input_ids']
+            encoder_input_ids = inputs['input_ids']
 
             logits = outs.logits
             last_hidden_state = outs.decoder_hidden_states[-1]
