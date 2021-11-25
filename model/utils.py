@@ -103,7 +103,7 @@ class Metric():
         score = self.rouge.get_scores(hyp, ref)[0]
         
         for metric, scores in self.rouge_scores.items():
-            for key, valud in scores.items():
+            for key, value in scores.items():
                 self.rouge_scores[metric][key] += score[metric][key]
         
         self.step += 1
