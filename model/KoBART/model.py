@@ -24,7 +24,7 @@ class KoBARTConditionalGeneration(nn.Module):
                               attention_mask=inputs['attention_mask'],
                               decoder_input_ids=inputs['decoder_input_ids'],
                               decoder_attention_mask=inputs['decoder_attention_mask'],
-                                labels=inputs['labels'], return_dict=True)
+                              labels=inputs['labels'], return_dict=True)
             
             encoder_input_ids = inputs['input_ids']
 
