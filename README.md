@@ -2,7 +2,7 @@
 🧀 KoBART summarization using pytorch + copy mechanism
 
 ## Data
-- Data 구조
+- Data statistics
     - Train Data : 27,392
     - Valid Data : 6,850
     - Test Data : 8,561
