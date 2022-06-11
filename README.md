@@ -9,9 +9,10 @@
  
 ## How to Train
 - KoBART fine-tuning + Copy Mechanism
-- Since the python libary was directly modified and used, I recommended to use a virtual environment. 😎
-    - geneartion_utils.py -> /site-packages/transformers/_geneartion_utils.py_
-    - modeling_bart.py -> /site-packages/transformers/models/bart/_modeling_bart.py_
+> **Warning**
+> - Since the python libary was directly modified and used, I recommended to use a virtual environment. 😎
+>     - geneartion_utils.py -> /site-packages/transformers/_geneartion_utils.py_
+>     - modeling_bart.py -> /site-packages/transformers/models/bart/_modeling_bart.py_
 - bash train_test.sh
 ```
 [Training]
