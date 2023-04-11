@@ -3,9 +3,9 @@
 
 ## Data
 - Data statistics
-    - Train Data : 27,392
-    - Valid Data : 6,850
-    - Test Data : 8,561
+    - Train Data : 29,432
+    - Valid Data : 7,358
+    - Test Data : 9,182
  
 ## How to Train
 - KoBART fine-tuning + Copy Mechanism
