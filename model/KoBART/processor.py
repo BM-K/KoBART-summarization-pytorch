@@ -100,9 +100,9 @@ class Processor():
                 loss.backward()
 
             self.config['optimizer'].step()
-            self.config['scheduler'].step()
             self.progress(loss.data)
-
+        
+        self.config['scheduler'].step()
         return self.return_value()
 
     def valid(self):
