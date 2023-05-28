@@ -69,8 +69,7 @@ class Metric():
             if pco['early_stop_patient'] == config['args'].patient:
                 pco['early_stop'] = True
                 writer.close()
-
-        # self.draw_graph(cp)
+                
         self.performance_check(cp)
 
     def preprocess_text(self, review):
