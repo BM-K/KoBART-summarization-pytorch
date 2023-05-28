@@ -93,9 +93,7 @@ class Metric():
                 tw.writerow(['id', 'summary'])
             tw.writerow([str(self.step + 1), hyp])
 
-    def rouge_score(self, config, hyp, ref):
-        #self.result_file(config, hyp)
-        
+    def rouge_score(self, config, hyp, ref):        
         ref = ' '.join(mecab.morphs(REMOVE_CHAR_PATTERN.sub(" ", ref.lower()).strip()))
         hyp = ' '.join(mecab.morphs(REMOVE_CHAR_PATTERN.sub(" ", hyp.lower()).strip()))
 
@@ -116,10 +114,6 @@ class Metric():
 
     def generation(self, config, inputs):
         outputs = config['model'](inputs, mode='test')
-        #outputs = config['model'].model.generate(inputs['input_ids'],
-        #                                         max_length=self.args.max_len,
-        #                                         num_beams=5, repetition_penalty=1.2)
-
         for step, beam in enumerate(outputs):
             ref = config['tokenizer'].decode(inputs['decoder_input_ids'][step], skip_special_tokens=True)
             hyp = config['tokenizer'].decode(beam, skip_special_tokens=True)
