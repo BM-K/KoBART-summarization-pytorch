@@ -73,16 +73,10 @@ class Metric():
         self.performance_check(cp)
 
     def preprocess_text(self, review):
-
-        # Remove breaks
         review = re.sub("<br />", " ", review)
-
-        # Remove non-letters and non-numbers
         alphanum = re.sub("[^A-Za-z0-9가-힣]", " ", review)
-
-        # Convert to lowercase and split into individual words
         tokens = alphanum.lower().split()
-
+        
         return (" ".join(tokens))
 
     def result_file(self, config, hyp):
