@@ -70,7 +70,7 @@ class ModelDataLoader(Dataset):
 
     def data2tensor(self, line):
         try:
-            source, target =  line[0].strip(), line[1].strip()# self.preprocess_text(line[0].strip()), self.preprocess_text(line[1].strip())
+            source, target =  line[0].strip(), line[1].strip()
         except IndexError:
             logger.info("Index Error")
             exit()
