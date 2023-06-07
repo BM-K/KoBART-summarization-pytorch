@@ -17,11 +17,11 @@ class ModelDataLoader(Dataset):
         self.tokenizer = tokenizer
         self.file_path = file_path
 
-        self.input_ids = []
-        self.attention_mask = []
-        self.decoder_input_ids = []
-        self.decoder_attention_mask = []
-        self.labels = []
+        self.input_ids = list()
+        self.attention_mask = list()
+        self.decoder_input_ids = list()
+        self.decoder_attention_mask = list()
+        self.labels = list()
 
         """
         init token, idx = <s>, 0
